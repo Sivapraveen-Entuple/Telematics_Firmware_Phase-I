@@ -31,9 +31,9 @@
 #define ACK_VAL I2C_MASTER_ACK
 #define NACK_VAL I2C_MASTER_NACK
 
-static esp_err_t i2c_master_read_slave(i2c_port_t i2c_num, uint8_t *data_rd, size_t size);
-static esp_err_t i2c_master_write_slave(i2c_port_t i2c_num, uint8_t *data_wr, size_t size);
-static esp_err_t i2c_master_init();
-static esp_err_t i2c_slave_init();
+static esp_err_t I2C_masterReadSlave(i2c_port_t i2c_num, uint8_t *data_rd, size_t size);
+static esp_err_t I2C_masterWriteSlave(i2c_port_t i2c_num, uint8_t *data_wr, size_t size);
+static esp_err_t I2C_masterInit();
+static esp_err_t I2C_slaveInit();
 
 #endif

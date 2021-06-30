@@ -1,6 +1,6 @@
 #include "i2c_util.h"
 
-static esp_err_t i2c_master_write_slave(i2c_port_t i2c_num, uint8_t *data_wr, size_t size)
+static esp_err_t I2C_masterWriteSlave(i2c_port_t i2c_num, uint8_t *data_wr, size_t size)
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
@@ -13,7 +13,7 @@ static esp_err_t i2c_master_write_slave(i2c_port_t i2c_num, uint8_t *data_wr, si
 }
 
 
-static esp_err_t i2c_master_read_slave(i2c_port_t i2c_num, uint8_t *data_rd, size_t size)
+static esp_err_t I2C_masterReadSlave(i2c_port_t i2c_num, uint8_t *data_rd, size_t size)
 {
     if (size == 0) {
         return ESP_OK;
@@ -41,7 +41,7 @@ static esp_err_t i2c_master_read_slave(i2c_port_t i2c_num, uint8_t *data_rd, siz
  * *******************************************************************
  */
 
-static esp_err_t i2c_master_init(void)
+static esp_err_t I2C_masterInit(void)
 {
     int i2c_master_port = I2C_MASTER_NUM;
     i2c_config_t conf;
@@ -65,7 +65,7 @@ static esp_err_t i2c_master_init(void)
  * *******************************************************************
  */
  
-static esp_err_t i2c_slave_init(void)
+static esp_err_t I2C_slaveInit(void)
 {
     int i2c_slave_port = I2C_SLAVE_NUM;
     i2c_config_t conf_slave;
@@ -83,7 +83,7 @@ static esp_err_t i2c_slave_init(void)
 
 /* i2c test task */
 
-static void i2c_test_task(void *arg)
+static void i2c_tesTask(void *arg)
 {
     static int adc1, adc2;
     int i = 0;
@@ -116,7 +116,7 @@ static void i2c_test_task(void *arg)
         adder++;
         xSemaphoreTake(print_mux, portMAX_DELAY);
         //we need to fill the slave buffer so that master can read later
-        ret = i2c_master_write_slave((i2c_port_t)I2C_MASTER_NUM, data_wr, (size_t)RW_TEST_LENGTH);
+        ret = I2C_masterWriteSlave((i2c_port_t)I2C_MASTER_NUM, data_wr, (size_t)RW_TEST_LENGTH);
         if (ret == ESP_OK) {
             size = i2c_slave_read_buffer((i2c_port_t)I2C_SLAVE_NUM, data, RW_TEST_LENGTH, 1000 / portTICK_RATE_MS);
         }
@@ -171,7 +171,7 @@ static void I2C_masterWriteSlaveRead(void *arg)
     
       xSemaphoreTake(print_mux, portMAX_DELAY);
       
-      ret = i2c_master_write_slave((i2c_port_t)I2C_MASTER_NUM, dataMasWr, (size_t)RW_TEST_LENGTH);
+      ret = I2C_masterWriteSlave((i2c_port_t)I2C_MASTER_NUM, dataMasWr, (size_t)RW_TEST_LENGTH);
       if (ret == ESP_OK) 
       {
            size = i2c_slave_read_buffer((i2c_port_t)I2C_SLAVE_NUM, dataSlvRd, RW_TEST_LENGTH, 1000 / portTICK_RATE_MS);
@@ -261,11 +261,11 @@ static void I2C_slaveWriteMasterRead(void *arg)
       {
           //ESP_LOGW(TAG, "i2c slave tx buffer full");
           Serial.printf("<%s> i2c slave tx buffer full !!! \n");
-          ret = i2c_master_read_slave((i2c_port_t)I2C_MASTER_NUM, dataMasRd, DATA_LENGTH);
+          ret = I2C_masterReadSlave((i2c_port_t)I2C_MASTER_NUM, dataMasRd, DATA_LENGTH);
       }
       else
       {
-          ret = i2c_master_read_slave((i2c_port_t)I2C_MASTER_NUM, dataMasRd, RW_TEST_LENGTH);
+          ret = I2C_masterReadSlave((i2c_port_t)I2C_MASTER_NUM, dataMasRd, RW_TEST_LENGTH);
       }
 
       if (ret == ESP_ERR_TIMEOUT) 

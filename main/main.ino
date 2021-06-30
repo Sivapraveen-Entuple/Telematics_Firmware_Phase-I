@@ -17,6 +17,8 @@
 #include "freertos/task.h"
 #include "i2c_util.h"
 
+#include <ArduinoJson.h>
+
 /* Semaphore util */
 SemaphoreHandle_t print_mux = NULL;
 
@@ -69,16 +71,16 @@ void setup() {
   
   Serial.begin(115200);
   print_mux = xSemaphoreCreateMutex();
-  ESP_ERROR_CHECK(i2c_slave_init());
-  ESP_ERROR_CHECK(i2c_master_init());
+  ESP_ERROR_CHECK(I2C_slaveInit());
+  ESP_ERROR_CHECK(I2C_masterInit());
   
   /* Queue Initialize */
   Q1 = xQueueCreate(10, sizeof(int));
   
   /* creating a task */
   
-  //xTaskCreate(i2c_test_task, "i2c_test_task_0", 1024 * 2, (void *)0, 10, NULL);
-  //xTaskCreate(i2c_test_task, "i2c_test_task_1", 1024 * 2, (void *)1, 10, NULL);  
+  //xTaskCreate(i2c_testTask, "i2c_test_task_0", 1024 * 2, (void *)0, 10, NULL);
+  //xTaskCreate(i2c_testTask, "i2c_test_task_1", 1024 * 2, (void *)1, 10, NULL);  
   xTaskCreate(I2C_masterWriteSlaveRead, "I2C - Master Write Slave Read", 1024*2, (void*)0, 10, NULL);
   xTaskCreate(I2C_slaveWriteMasterRead, "I2C - Slave Write Master Read", 1024*2, (void*)1, 10, NULL);
   
